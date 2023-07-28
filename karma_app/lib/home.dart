@@ -26,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return "${date.day}/${date.month}";
   });
 
+  List<String> todos = []; // Initialize todos as an empty list
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "WELCOME",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20.0,
+                    fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -54,12 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   userName,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18.0,
+                    fontSize: 20.0,
                   ),
                 ),
                 // Avatar
                 CircleAvatar(
-                  radius: 24.0,
+                  radius: 32.0,
                   backgroundImage: NetworkImage(avatarImageURL), // Load image from URL
                 ),
               ],
@@ -71,10 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView.builder(
               itemCount: dates.length,
               itemBuilder: (context, index) {
+                final date = dates[index];
                 return ListTile(
-                  title: Text(dates[index]),
+                  title: Text(date),
                   onTap: () {
-                    // Handle date selection if needed
+                    _showTodoModal(context, date);
                   },
                 );
               },
@@ -84,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showTodoModal();
+          _showTodoModal(context, "Add New Todo");
         },
         child: Icon(Icons.add),
       ),
@@ -93,8 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
         
   
          
+  void _showTodoModal(BuildContext context, String selectedDate) {
+    final _todoController = TextEditingController();
 
-  void _showTodoModal() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -104,17 +108,42 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "Todos List",
+                "Todo List for $selectedDate",
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 16.0),
-              // Add your todo list here, e.g., using ListView or other widgets
-              Text("Todo 1"),
-              Text("Todo 2"),
-              // Add other todo items here...
+              TextField(
+                controller: _todoController,
+                decoration: InputDecoration(
+                  hintText: "Type your todo...",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  if (_todoController.text.isNotEmpty) {
+                    // Add the todo to the list
+                    setState(() {
+                      todos.add(_todoController.text);
+                    });
+
+                    // Clear the text field after adding the todo
+                    _todoController.clear();
+                  }
+                },
+                child: Text("Add Todo"),
+              ),
+              SizedBox(height: 16.0),
+              // Display todos below the button
+              if (todos.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: todos.map((todo) => Text(todo)).toList(),
+                ),
             ],
           ),
         );
