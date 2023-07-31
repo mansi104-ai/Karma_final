@@ -1,9 +1,9 @@
-// main.dart
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'home.dart'; // Import the home.dart file
+// main.dart
 import 'amplifyconfiguration.dart';
 
 void main() {
@@ -35,18 +35,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Function to navigate to the HomeScreen
+
   void _goToHomeScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
-    );
-  }
+  Navigator.pushNamed(context, '/home');
+}
 
   @override
   Widget build(BuildContext context) {
     return Authenticator(
       child: MaterialApp(
         builder: Authenticator.builder(),
+        routes: {
+        '/': (context) => MyApp(), // The default route (home)
+        '/home': (context) => Home(username: 'Gopal Verma'), // Named route for Home widget
+      },
         home: Scaffold(
           appBar: AppBar(
             title: Text('Main Screen'),
@@ -58,14 +60,15 @@ class _MyAppState extends State<MyApp> {
                 Text('You are logged in!'),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _goToHomeScreen, // Call the function to navigate
-                  child: Text('Go to Home Screen'),
+                onPressed: () => Navigator.pushNamed(context, '/home'), // Navigate to /home named route
+                child: Text('Go to HomeScreen'),
+              )
+              ]
                 ),
-              ],
+            
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
