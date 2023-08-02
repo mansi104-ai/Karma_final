@@ -2,7 +2,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
- // Import the home.dart file
+import 'home.dart'
 // main.dart
 import 'amplifyconfiguration.dart';
 
@@ -114,6 +114,9 @@ class _MyAppState extends State<MyApp> {
         child: Icon(Icons.add),
       ),
           ),
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+      theme: ThemeData(primarySwatch: Colors.yellow),
         ),
       );
   }
